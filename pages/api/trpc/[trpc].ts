@@ -1,10 +1,12 @@
-import * as trpc from '@trpc/server';
-import * as trpcNext from '@trpc/server/adapters/next';
-import { z } from 'zod';
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+import { z } from "zod";
+
+import { todoRouter } from "./todo";
 
 export const appRouter = trpc
   .router()
-  .query('hello', {
+  .query("hello", {
     input: z
       .object({
         text: z.string().nullish(),
@@ -12,10 +14,11 @@ export const appRouter = trpc
       .nullish(),
     resolve({ input }) {
       return {
-        greeting: `hello ${input?.text ?? 'world'}`,
+        greeting: `hello ${input?.text ?? "world"}`,
       };
     },
-  });
+  })
+  .merge("todo.", todoRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
